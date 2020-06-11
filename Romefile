@@ -1,0 +1,8 @@
+cache: # required
+  local: Rome/Cache/
+
+repositoryMap:
+
+- lottie-ios:
+  - name: Lottie
+    platforms: [iOS]

@@ -1,0 +1,82 @@
+options:
+  deploymentTarget:
+    iOS: 12.0
+  bundleIdPrefix: com.TestProject
+attributes:
+  ORGANIZATIONNAME: TestProject
+
+configs:
+  Release: release
+  Debug: debug
+  Staging: release
+  PreProduction: release
+  Develop: release
+
+settingGroups:
+  default:
+    TARGETED_DEVICE_FAMILY: 1
+    ENABLE_BITCODE: YES
+    SDKROOT: iphoneos
+    SWIFT_VERSION: 5.0.1
+    VALID_ARCHS:
+      - $(ARCHS_STANDARD)
+  application:
+    base:
+      CODE_SIGN_STYLE: Manual
+      ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: $(inherited)
+      OTHER_LDFLAGS:
+        - "-ObjC"
+        - $(inherited)
+    configs:
+      debug:
+        OTHER_SWIFT_FLAGS: $(inherited) -Xfrontend -warn-long-expression-type-checking=1000 -Xfrontend -warn-long-function-bodies=1000 -enable-batch-mode -enable-experimental-dependencies
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: iPhone Developer
+      release:
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: iPhone Distribution
+      staging:
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: iPhone Distribution
+      preproduction:
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: iPhone Distribution
+      develop:
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: iPhone Distribution
+
+name: TestProject
+targets:
+  TestProject:
+    platform: iOS
+    type: application
+    sources:
+      - App
+    dependencies:
+      - target: Core
+      - carthage: Lottie
+        settings:
+    settings:
+      base:
+        PRODUCT_NAME: TestProject
+        PRODUCT_BUNDLE_IDENTIFIER: com.TestProject.app
+        INFOPLIST_FILE: app/Info.plist
+        SWIFT_OBJC_BRIDGING_HEADER: app/Bridging-Header.h
+      configs:
+        debug:
+          PROVISIONING_PROFILE_SPECIFIER: com.TestProject.app Development
+        release:
+          PROVISIONING_PROFILE_SPECIFIER: com.TestProject.app AppStore
+        staging:
+          PRODUCT_BUNDLE_IDENTIFIER: com.TestProject.app.staging
+          PROVISIONING_PROFILE_SPECIFIER: com.TestProject.app.staging AppStore
+        preproduction:
+          PRODUCT_BUNDLE_IDENTIFIER: com.TestProject.app.preprod
+          PROVISIONING_PROFILE_SPECIFIER: com.TestProject.app.preprod AppStore
+        develop:
+          PRODUCT_BUNDLE_IDENTIFIER: com.TestProject.app.develop
+          PROVISIONING_PROFILE_SPECIFIER: com.TestProject.app.develop AppStore
+
+  Core:
+    platform: iOS
+    type: framework
+    sources:
+      - Core
+    settings:
+      base:
+        INFOPLIST_FILE: core/Info.plist
